@@ -3,12 +3,9 @@ import { LoginScreen } from "./Screens/auth/LoginScreen/LoginScreen";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CreateScreen } from "./Screens/MainScreen/CreateScreen/CreateScreen";
-import { Home } from './Screens/NestedScreen/Home/Home';
 import { ProfileScreen } from './Screens/MainScreen/ProfileScreen/ProfileScreen';
 import { PostsScreen } from './Screens/MainScreen/PostsScreen/PostsScreen';
-
-import { MaterialIcons, MaterialCommunityIcons, Fontisto, FontAwesome5  } from '@expo/vector-icons';
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity,View } from "react-native";
 import { AntDesign,Feather,SimpleLineIcons} from '@expo/vector-icons';
 import { signOutUser } from './redux/auth/authOprations';
 import { useDispatch } from 'react-redux';
@@ -19,92 +16,56 @@ const MainTab = createBottomTabNavigator();
 export function useRoute(online) {
     const dispatch = useDispatch();
     if (online) {
-        return (<MainTab.Navigator screenOptions={{ tabBarShowLabel: false, tabBarItemStyle: {}, }}        >
-                        <MainTab.Screen options={{
-                headerRight: () => (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        console.log('signout');
-                                        dispatch(signOutUser())
-                                }} style={{ paddingRight: 16 }} >
-                        <Feather name="log-out" size={24} color="#BDBDBD" />
-                    </TouchableOpacity>
-                ),
-                tabBarLabel: 'Posts',
-                tabBarIcon: ({ focused, color, size }) => {
-                    if (!focused) return <SimpleLineIcons name="grid" size={14} color={'#212121'}
-                        style={{
-                            backgroundColor: '#fff',
-                        }}
-                    />
-                    return <SimpleLineIcons name="grid" size={14} color={'#fff'}
-                        style={{
-                            backgroundColor: '#FF6C00',
-                            borderRadius: 40,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                            paddingHorizontal: 15,
-                        }}
-                    />
-                },
-            }}
-                name="Публикации"
-                component={PostsScreen}
-            />
-
-            <MainTab.Screen
-                options={({ navigation }) => ({
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ paddingLeft: 16 }} onPress={() => { navigation.goBack(); }}>
-                            <Feather name="arrow-left" size={24} color="#2a2a2a" />
+        return (
+            <MainTab.Navigator screenOptions={{ tabBarShowLabel: false, }}        >
+                <MainTab.Screen options={{
+                    headerRight: () => (
+                        <TouchableOpacity
+                            onPress={() => {
+                                console.log('signout');
+                                dispatch(signOutUser())
+                            }} style={{ paddingRight: 16 }} >
+                            <Feather name="log-out" size={24} color="#BDBDBD" />
                         </TouchableOpacity>
                     ),
+                    tabBarLabel: 'Posts',
                     tabBarIcon: ({ focused, color, size }) => {
-                        if (!focused) return <AntDesign name="plus" size={14} color={'#212121'}
-                            style={{
-                                backgroundColor: '#fff',
-                            }}
-                        />
-                        return <AntDesign name="plus" size={14} color={'#fff'}
-                            style={{
-                                backgroundColor: '#FF6C00',
-                                borderRadius: 40,
-                                paddingTop: 5,
-                                paddingBottom: 5,
-                                paddingHorizontal: 15,
-                            }}
-                        />
+                        return <SimpleLineIcons name="grid" size={24} color={'#212121'} />
                     },
-                })}
-                name="Создать публикацию"
-                component={CreateScreen}
-            />
+                }}
+                    name="Публикации"
+                    component={PostsScreen}
+                />
+                <MainTab.Screen
+                    options={({ navigation }) => ({
+                        headerLeft: () => (
+                            <TouchableOpacity style={{ paddingLeft: 16 }} onPress={() => { navigation.goBack(); }}>
+                                <Feather name="arrow-left" size={24} color="#2a2a2a" />
+                            </TouchableOpacity>
+                        ),
+                        tabBarIcon: ({ focused, color, size }) => {
 
-            <MainTab.Screen
-                options={{
-                tabBarLabel: 'Profile',
-                tabBarIcon: ({ focused, color, size }) => {
-                    if (!focused) return <Feather name="user" size={14} color={'#212121'}
-                        style={{
-                            backgroundColor: '#fff',
-                        }}
-                    />
-                    return <Feather name="user" size={14} color={'#fff'}
-                        style={{
-                            backgroundColor: '#FF6C00',
-                            borderRadius: 40,
-                            paddingTop: 5,
-                            paddingBottom: 5,
-                            paddingHorizontal: 15,
-                        }}
-                    />
-                },
-            }}
-                name="Профиль"
-                component={ProfileScreen}
-            />
-        </MainTab.Navigator>
-        )
+                            return (<View style={{ width: 70, height: 40, backgroundColor: '#FF6C00', borderRadius: 40, alignItems: 'center', paddingTop: 13 }}>
+                                <AntDesign name="plus" size={13} color={'#fff'} />
+                            </View>)
+                        },
+                    })}
+                    name="Создать публикацию"
+                    component={CreateScreen}
+                />
+
+                <MainTab.Screen
+                    options={{
+                        tabBarLabel: 'Profile',
+                        tabBarIcon: ({ focused, color, size }) => {
+                            return <Feather name="user" size={24} color={'#212121'} />
+                        },
+                    }}
+                    name="Профиль"
+                    component={ProfileScreen}
+                />
+            </MainTab.Navigator>
+        );
     };
     return (
         <AuthStack.Navigator >
