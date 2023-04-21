@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDUtyqxJIOsBZKBC-EP-KK_0ubz--2asmo",
@@ -9,38 +11,10 @@ const firebaseConfig = {
   messagingSenderId: "617444830428",
   appId: "1:617444830428:web:0b7db10db0bce52dde5819",
   measurementId: "G-QPRP62R8K5",
-  databaseURL: "https://postImage.firebaseio.com",
+ storageBucket:'gs://rn-social-project-bfa0b.appspot.com/'
 };
 
 export const app = initializeApp(firebaseConfig);
-export const database = getDatabase(app);
-
-  // .catch((error) => {
-  //   const errorCode = error.code;
-  //   const errorMessage = error.message;
-  //   // ..
-  // });
-// const auth = getAuth(app); 
-// export const signIn = async ({ name, email, password }) => {
-//   try {
-//      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-//   console.log(userCredential);
-//   return userCredential.user
-    
-//   } catch (error) {
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//   }
-// };
-   
-// export const logIn = async ({ email, password }) => {
-//   try {
-//      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-//   console.log(userCredential);
-//   return userCredential.user
-    
-//   } catch (error) {
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//   }
-//    };
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+export const auth = getAuth(app);

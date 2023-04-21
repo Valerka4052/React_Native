@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {signUp,signIn, refreshStatus, signOutUser, refreshUser} from '../auth/authOprations'
+import { signUp, signIn, refreshStatus, signOutUser } from '../auth/authOprations';
 
 
 export const authSlice = createSlice({
@@ -7,33 +7,35 @@ export const authSlice = createSlice({
     initialState: {
         userId: null,
         nickName: null,
+        email: null,
+        devicePhoto: null,
         stateChange: false,
+        profileImage: null,
     },
     reducers: {
-        
-    }, extraReducers: builder => {
+        takeDevicePhoto(state, { payload }) { return { ...state, devicePhoto: payload } },
+        photoFromFireBase(state, { payload }) { return { ...state, profileImage: payload } },
+    },
+    extraReducers: builder => {
         builder
-            .addCase(signUp.pending, (state) => {
-               
-            })
             .addCase(signUp.fulfilled, (state, { payload }) => {
                 console.log(payload);
-                return { ...state, userId: payload.userId, nickName: payload.nickName, stateChange: true };
+                return { ...state, userId: payload.userId, email: payload.email, nickName: payload.nickName, stateChange: true };
             })
             .addCase(signIn.fulfilled, (state, { payload }) => {
                 console.log(payload);
-                if(!payload)return
-                return { ...state, userId: payload.userId, nickName: payload.nickName, stateChange: true };
+                if (!payload) return;
+                return { ...state, userId: payload.userId, nickName: payload.nickName, profileImage: payload.photoURL, email: payload.email, stateChange: true };
             })
             .addCase(refreshStatus.fulfilled, (state, { payload }) => {
-                if(!payload)return
-                console.log(payload);
-                return { ...state, userId: payload.userId, nickName: payload.nickName, stateChange: true };
+                if (!payload) return;
+                const { userId, nickName, email, profileImage } = payload;
+                                console.log(payload);
+                return { ...state, userId: userId, nickName: nickName, email: email,profileImage:profileImage, stateChange: true };
             })
             .addCase(signOutUser.fulfilled, (state) => {
-                return { ...state, userId: null, nickName: null, stateChange: false };
+                return { ...state, userId: null, nickName: null, email: null, stateChange: false };
             })
-           
     },
 });
-
+export const { takeDevicePhoto, photoFromFireBase } = authSlice.actions;

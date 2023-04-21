@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TouchableWithoutFeedback, TouchableOpacity, Alert, KeyboardAvoidingView, Keyboard, Text, TextInput, View, StatusBar, ImageBackground, Platform } from "react-native";
+import { TouchableWithoutFeedback, TouchableOpacity, Alert, KeyboardAvoidingView, Keyboard, Text, TextInput, View, ImageBackground, Platform } from "react-native";
 import { styles } from "./style";
 
 import { useDispatch } from "react-redux";
@@ -25,7 +25,6 @@ export function LoginScreen({ navigation }) {
         if (!logInValues.email || !logInValues.password) {
             return Alert.alert('Ошибка регистрации', 'заполните все поля')
         };
-        // console.log(logInValues);
         setlogInValues(AuthorisationValues);
         dispatch(signIn(logInValues));
         Keyboard.dismiss();
@@ -33,10 +32,9 @@ export function LoginScreen({ navigation }) {
     };
 
     return (
-                <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>
+        <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>
             <ImageBackground source={require('../../../assets/sky.png')} resizeMode="cover" style={styles.backgrounImageCon5tainer}>
                 <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>
-                
                     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                         <View style={styles.formBox}>
                             <Text style={[styles.mainText, { marginTop: 32 }]} >Войти</Text>

@@ -18,8 +18,12 @@ export const styles = StyleSheet.create({
         paddingRight: 16
     },
     profileImageContainer: {
+        width: 150,
+        height: 150,
+        // borderRadius: 75,
+        // overflow:'hidden',
         position: 'absolute',
-        top: -60
+        top: -75
     },
     profileImage: {
         width: 120,
@@ -28,8 +32,13 @@ export const styles = StyleSheet.create({
     },
     profileButton: {
         position: 'absolute',
-        bottom: 12,
-        right: -12
+        bottom: 15,
+        right: -35
+    },
+    profileButton2: {
+        position: 'absolute',
+        bottom: 15,
+        left: -35
     },
     mainText: {
         fontFamily: 'roboto',

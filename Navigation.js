@@ -17,14 +17,10 @@ export function useRoute(online) {
     const dispatch = useDispatch();
     if (online) {
         return (
-            <MainTab.Navigator screenOptions={{ tabBarShowLabel: false, }}        >
+            <MainTab.Navigator screenOptions={{ tabBarShowLabel: false, }}>
                 <MainTab.Screen options={{
                     headerRight: () => (
-                        <TouchableOpacity
-                            onPress={() => {
-                                console.log('signout');
-                                dispatch(signOutUser())
-                            }} style={{ paddingRight: 16 }} >
+                        <TouchableOpacity onPress={() => { console.log('signout'); dispatch(signOutUser()) }} style={{ paddingRight: 16 }} >
                             <Feather name="log-out" size={24} color="#BDBDBD" />
                         </TouchableOpacity>
                     ),
@@ -44,7 +40,6 @@ export function useRoute(online) {
                             </TouchableOpacity>
                         ),
                         tabBarIcon: ({ focused, color, size }) => {
-
                             return (<View style={{ width: 70, height: 40, backgroundColor: '#FF6C00', borderRadius: 40, alignItems: 'center', paddingTop: 13 }}>
                                 <AntDesign name="plus" size={13} color={'#fff'} />
                             </View>)
@@ -53,14 +48,27 @@ export function useRoute(online) {
                     name="Создать публикацию"
                     component={CreateScreen}
                 />
-
                 <MainTab.Screen
-                    options={{
+                    options={({ navigation }) => ({
+                        headerLeft: () => (
+                            <TouchableOpacity style={{ paddingLeft: 16 }} onPress={() => { navigation.goBack(); }}>
+                                <Feather name="arrow-left" size={24} color="#2a2a2a" />
+                            </TouchableOpacity>
+                        ),
+                        headerRight: () => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    console.log('signout');
+                                    dispatch(signOutUser())
+                                }} style={{ paddingRight: 16 }} >
+                                <Feather name="log-out" size={24} color="#BDBDBD" />
+                            </TouchableOpacity>
+                        ),
                         tabBarLabel: 'Profile',
                         tabBarIcon: ({ focused, color, size }) => {
                             return <Feather name="user" size={24} color={'#212121'} />
                         },
-                    }}
+                    })}
                     name="Профиль"
                     component={ProfileScreen}
                 />

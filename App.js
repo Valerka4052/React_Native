@@ -1,7 +1,8 @@
 import { useFonts } from 'expo-font';
 import { Provider, useSelector } from 'react-redux';
-import { store } from './redux/store';
+import { store,persistor } from './redux/store';
 import { Main } from './Main/Main';
+// import { PersistGate } from 'redux-persist/integration/react';
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -10,7 +11,9 @@ export default function App() {
   if (!fontsLoaded) return null
   return (
     <Provider store={store} >
+      {/* <PersistGate loading={null} persistor={persistor}> */}
       <Main />
+      {/* </PersistGate> */}
     </Provider>
   );
 };

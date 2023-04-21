@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { TouchableWithoutFeedback, TouchableOpacity, Alert, KeyboardAvoidingView, Keyboard, Text, TextInput, View, ImageBackground, Image, Platform } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign,Ionicons } from '@expo/vector-icons';
 import { styles } from "./style";
-import { authSignInUser } from "../../../redux/auth/authOprations";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { signUp } from "../../../redux/auth/authOprations";
-
+import { Camera } from "expo-camera";
+import { nanoid } from "nanoid/non-secure";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth, storage } from "../../../firebase/config";
+import { photoFromFireBase, takeDevicePhoto } from "../../../redux/auth/authReducer";
+import { updateProfile } from "firebase/auth";
+import * as ImagePicker from 'expo-image-picker';
 
 
 const AuthorisationValues = {
@@ -24,16 +29,56 @@ export function RegistrationScreen({navigation}) {
     const [showPassword, setShowPassword] = useState(true);
     const [borderColor, setBorderColor] = useState(borders);
     const [showKeyboard, setShowKeyboard] = useState(false);
+    const [camera, setSnap] = useState(null);
+    const [photo, setphoto] = useState(null);
     const togglePassword = () => setShowPassword(prevState => !prevState);
     const dispatch = useDispatch();
+    const { devicePhoto } = useSelector(state => state.authorisation);
 
-    const submit = () => {
-        if (!signUpValues.email || !signUpValues.name || !signUpValues.password) {
-            return Alert.alert('Ошибка регистрации', 'заполните все поля')
+    const takePicture = async () => {
+        const photos = await camera.takePictureAsync();
+        setphoto(photos.uri);
+        dispatch(takeDevicePhoto(photos.uri))
+    };
+
+    const uploadPhotoToServer = async (photo) => {
+        const response = await fetch(photo);
+        const file = await response.blob();
+        const id = nanoid();
+        const posts = ref(storage, `posts/${id}`);
+        const uoloadImage = await uploadBytes(posts, file);
+        const downloadImage = await getDownloadURL(posts);
+        return downloadImage;
+    };
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        console.log(result);
+        if (!result.canceled) {
+            setphoto(result.assets[0].uri);
+            dispatch(takeDevicePhoto(result.assets[0].uri))
         };
-        // console.log(signUpValues);
-        setSignUpValues(AuthorisationValues);
-        dispatch(signUp(signUpValues));
+    };
+
+    const submit = async () => {
+        if (!signUpValues.email || !signUpValues.name || !signUpValues.password) {
+            return Alert.alert('Ошибка регистрации', 'заполните все поля');
+        };
+        //    dispatch(takeDevicePhoto(photo))
+        // console.log('signUpValues',signUpValues);
+        dispatch(signUp(signUpValues)).then(async (user) => {
+            //    console.log('value',user);
+            const img = await uploadPhotoToServer(devicePhoto)
+            // console.log('img',img);
+            updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
+            dispatch(photoFromFireBase(img));
+        });
+        // setSignUpValues(AuthorisationValues);
         Keyboard.dismiss();
     };
 
@@ -44,11 +89,14 @@ export function RegistrationScreen({navigation}) {
                     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
                         <View style={styles.formBox}>
                             <View style={styles.profileImageContainer}>
-                                <Image source={require('../../../assets/user.png')} style={styles.profileImage} />
-                                <View>
-                                    <AntDesign name="closecircleo" size={25} color='#E8E8E8' style={styles.profileButton} />
-                                    {/* <AntDesign name="pluscircleo" size={25} color='#FF6C00' style={styles.profileButton} /> */}
-                                </View>
+                                {photo ? <Image source={{ uri: photo }} style={{ flex: 1, borderRadius: 75, overflow: 'hidden', }} /> :
+                                    <Camera ref={setSnap} style={{ flex: 1, borderRadius: 75, overflow: 'hidden', }} type={'front'}  ></Camera>}
+                                <TouchableOpacity style={styles.profileButton}>
+                                    <Ionicons onPress={!photo ? takePicture : () => setphoto(null)} name="camera-outline" size={28} color='red' />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.profileButton2}>
+                                    <AntDesign onPress={pickImage} name="pluscircleo" size={28} color='#FF6C00' />
+                                </TouchableOpacity>
                             </View>
                             <Text style={[styles.mainText, { marginTop: 92 }]} >Регистрация</Text>
                             <View style={{ marginTop: 33, width: '100%' }}>
@@ -71,20 +119,13 @@ export function RegistrationScreen({navigation}) {
                             </View>
                             <View style={{ marginTop: 16, width: '100%' }}>
                                 <TextInput
-                                    onFocus={() => {
-                                        setShowKeyboard(true)
-                                        setBorderColor(prev => ({ ...prev, email: '#FF6C00' }))
-                                    }}
-                                    onBlur={() => {
-                                        setBorderColor(prev => ({ ...prev, email: '#E8E8E8' }))
-                                    }}
+                                    onFocus={() => { setShowKeyboard(true); setBorderColor(prev => ({ ...prev, email: '#FF6C00' })) }}
+                                    onBlur={() => { setBorderColor(prev => ({ ...prev, email: '#E8E8E8' })) }}
                                     placeholderTextColor={'#BDBDBD'}
                                     keyboardType="email-address"
                                     placeholder="Адрес электронной почты"
                                     style={[styles.input, { borderColor: borderColor.email }]}
-                                    onChangeText={(value) => {
-                                        setSignUpValues(prevState => ({ ...prevState, email: value }))
-                                    }}
+                                    onChangeText={(value) => { setSignUpValues(prevState => ({ ...prevState, email: value })) }}
                                     value={signUpValues.email}
                                 />
                             </View>

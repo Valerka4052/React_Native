@@ -5,11 +5,15 @@ import { useEffect } from "react";
 import { refreshStatus } from "../redux/auth/authOprations";
 
 export function Main() {
-    const {stateChange} = useSelector(state => state.authorisation)
-    const dispatch = useDispatch()
+    const { authorisation } = useSelector(state => state);
+    const dispatch = useDispatch();
 
-    useEffect(() => {dispatch(refreshStatus())},[dispatch])
-     const route = useRoute(stateChange)
+    useEffect(() => {
+       console.log;('useffect', authorisation.userId)
+        dispatch(refreshStatus())
+    },);
+    
+    const route = useRoute(authorisation.stateChange);
     return (
         <NavigationContainer>
             {route}
