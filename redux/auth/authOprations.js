@@ -1,24 +1,27 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile,signOut  } from "firebase/auth";
-import { auth } from "../../firebase/config";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile,signOut, getAuth  } from "firebase/auth";
+import { app, auth } from "../../firebase/config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { Alert } from "react-native";
 
 export const signUp = createAsyncThunk(
   'authorisation/signUp',
   async function ({ name, email, password }) {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      const user = auth.currentUser;
-      console.log('user',user);
-      await updateProfile(user, { displayName: name,  });
-      const userUpdateProfile = {
-        nickName: user.displayName,
-        userId: user.uid,
-        email: user.email,
-      };
-      return userUpdateProfile;
+      
+      const response = await createUserWithEmailAndPassword(auth, email, password).then(({ user }) => {
+        const userUpdateProfile = {
+          userId: user.uid,
+          email: user.email,
+        };
+        return userUpdateProfile;
+      });
+      return response;
     } catch (error) {
+
+      console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;
+      Alert.alert(errorMessage);
     };
   },
 );
@@ -41,8 +44,10 @@ export const signIn = createAsyncThunk(
         return null;
       }
     } catch (error) {
+      console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;
+      Alert.alert(errorMessage);
     };
   },
 );
@@ -54,7 +59,8 @@ export const signOutUser = createAsyncThunk(
        signOut(auth);
       console.log('out');
     } catch (error) {
-      console.log(error);
+     console.log(error);
+     Alert.alert(error);
     };
   },
 );

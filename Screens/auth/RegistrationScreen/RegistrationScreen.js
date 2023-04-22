@@ -8,7 +8,7 @@ import { Camera } from "expo-camera";
 import { nanoid } from "nanoid/non-secure";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, storage } from "../../../firebase/config";
-import { photoFromFireBase, takeDevicePhoto } from "../../../redux/auth/authReducer";
+import { inRegister, inRegisterWithoutPhoto, photoFromFireBase, takeDevicePhoto } from "../../../redux/auth/authReducer";
 import { updateProfile } from "firebase/auth";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -43,7 +43,6 @@ export function RegistrationScreen({ navigation }) {
     },[])
 
     const takePicture = async () => {
-        console.log('camera',camera);
         const photos = await camera.takePictureAsync();
         setphoto(photos.uri);
         dispatch(takeDevicePhoto(photos.uri))
@@ -77,16 +76,25 @@ export function RegistrationScreen({ navigation }) {
         if (!signUpValues.email || !signUpValues.name || !signUpValues.password) {
             return Alert.alert('Ошибка регистрации', 'заполните все поля');
         };
-        dispatch(signUp(signUpValues)).then(async (user) => {
-            //    console.log('value',user);
+       await dispatch(signUp(signUpValues)).then(async (user) => {
+            console.log('value', user);
+           
             if (photo) {
                 const img = await uploadPhotoToServer(devicePhoto)
-                // console.log('img',img);
-                updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
-                dispatch(photoFromFireBase(img));
-            };
+                console.log('img', img);
+
+                  await updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
+                const updatedValues = {
+                    photo: auth.currentUser.photoURL,
+                    nameP: auth.currentUser.displayName
+                }
+                dispatch(photoFromFireBase(updatedValues));
+            } else {
+                await updateProfile(auth.currentUser, { displayName: signUpValues.name });
+                dispatch(inRegisterWithoutPhoto(auth.currentUser.displayName))
+            }
+             dispatch(inRegister());
         });
-        // setSignUpValues(AuthorisationValues);
         Keyboard.dismiss();
     };
 
@@ -175,3 +183,5 @@ export function RegistrationScreen({ navigation }) {
         </TouchableWithoutFeedback>
     );
 };
+
+

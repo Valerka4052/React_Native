@@ -77,7 +77,7 @@ const Comment = ({ item, nickName, profileImage }) => {
 const Head = ({ picture }) => {
     return (
         <View style={{ flex: 1, display: 'flex', alignItems: 'center',}}>
-            <Image style={{ width: 343, height: 240, borderRadius: 8, marginTop: 32, }} source={{ uri: picture }} />
+            <Image style={{ width: '100%', height: 300, borderRadius: 8, marginTop: 32, }} source={{ uri: picture }} />
         </View>
     );
 };

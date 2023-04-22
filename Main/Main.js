@@ -9,9 +9,8 @@ export function Main() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-       console.log;('useffect', authorisation.userId)
         dispatch(refreshStatus())
-    },);
+    },[]);
     
     const route = useRoute(authorisation.stateChange);
     return (

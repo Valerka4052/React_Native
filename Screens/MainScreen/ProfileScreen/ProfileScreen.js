@@ -27,7 +27,10 @@ export function ProfileScreen({ navigation }) {
         <ImageBackground source={require('../../../assets/sky.png')} resizeMode="cover" style={{ flex: 1, paddingTop: 100, justifyContent: 'flex-end' }}>
             <View style={{ alignItems: 'center', backgroundColor: '#FFFFFF', borderTopLeftRadius: 25, borderTopRightRadius: 25, width: '100%', paddingLeft: 16, paddingRight: 16 }}>
                 <View style={{ position: 'absolute', top: -60 }}>
-                    <Image source={profileImage?{uri:profileImage}:require('../../../assets/user.png')} style={{ width: 120, height: 120, borderRadius: 16, }} />
+                    <Image
+                        source={{ uri: profileImage }}
+                        // source={profileImage ? { uri: profileImage } : require('../../../assets/user.png')}
+                        style={{ width: 120, height: 120, borderRadius: 16, }} />
                                    </View>
                 <View style={{ paddingTop: 70 }}>
                     <FlatList
@@ -68,7 +71,7 @@ function Post({ item, navigation }) {
         <View
             style={{ width: '100%', marginBottom: 34, }}>
             <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })}>
-                <Image source={{ uri: item.picture }} style={{ width: 343, height: 240, borderRadius: 8 }} />
+                <Image source={{ uri: item.picture }} style={{ width: '100%', height: 240, borderRadius: 8 }} />
                 <Text style={{ marginTop: 8, color: '#212121', fontWeight: 500 }}>{item.title}</Text>
             </TouchableOpacity>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 11, width: '100%' }}  >
