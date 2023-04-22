@@ -40,6 +40,12 @@ export function CreateScreen({ navigation }) {
     }, []);
 
     useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+        })();
+    }, []);
+
+    useEffect(() => {
         setPost(prev => ({ ...prev, nickName: nickName, userId: userId }));
     }, []);
     
@@ -101,8 +107,8 @@ export function CreateScreen({ navigation }) {
 
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
-            <KeyboardAwareScrollView style={{ flex:1, width: '100%', paddingHorizontal: 16, backgroundColor: '#FFFFFF', }}>
-                <View style={{ borderRadius: 8, width: '100%', height: '70%', backgroundColor: '#F6F6F6', borderWidth: 1, borderColor: '#E8E8E8', marginTop: 32, overflow: 'hidden', }} >
+            <KeyboardAwareScrollView style={{ flex:1, width: '100%',height: '100%', paddingHorizontal: 16, backgroundColor: '#fff', }}>
+                <View style={{ borderRadius: 8, width: 480,alignSelf: 'center', height: 360, backgroundColor: '#F6F6F6', borderWidth: 1,overflow:'hidden', borderColor: '#E8E8E8', marginTop: 32, }} >
                     {photo === null ?
                         <Camera ref={setSnap} style={{ flex: 1, }} type={flipCamera ? 'front' : 'back'}  >
                             {photoload ?
@@ -113,7 +119,7 @@ export function CreateScreen({ navigation }) {
                                     <TouchableOpacity onPress={takePicture} style={{ width: 60, height: 60, borderRadius: 50, backgroundColor: 'rgba(255, 255, 255, 0.3)', alignItems: 'center', justifyContent: 'center', top: '50%', left: '50%', transform: [{ translateY: -30 }, { translateX: -30 }] }}>
                                         <FontAwesome name="camera" size={24} color="#BDBDBD" />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={toggleCamera} style={{ width: 40, height: 40, borderRadius: 50, backgroundColor: 'rgba(255, 255, 255, 0.3)', alignItems: 'center', justifyContent: 'center', bottom: -170, right: -310 }}>
+                                    <TouchableOpacity onPress={toggleCamera} style={{ width: 40, height: 40, borderRadius: 50, backgroundColor: 'rgba(255, 255, 255, 0.3)', alignItems: 'center', justifyContent: 'center', top: '50%', left: '50%', transform: [{ translateY: -80 }, { translateX: 140 }] }}>
                                         <MaterialIcons name="flip-camera-android" size={20} color="#BDBDBD" />
                                     </TouchableOpacity>
                                 </View>}
@@ -131,7 +137,7 @@ export function CreateScreen({ navigation }) {
                 <TextInput
                     onChangeText={(value) => { setPost(prev => ({ ...prev, title: value })) }} value={post.title}
                     placeholder='Название...' style={{ borderBottomWidth: 1, borderBottomColor: '#E8E8E8', paddingBottom: 15, width: '100%', marginTop: 48, fontSize: 16 }} />
-                <View syle={{ width: '100%' }}>
+                <View syle={{ width: '100%' ,alignItems: 'center'}}>
                     <TextInput
                         onChangeText={(value) => { setPost(prev => ({ ...prev, location: value })) }} value={post.location}
                         placeholder='Местность...' style={{ borderBottomWidth: 1, borderBottomColor: '#E8E8E8', paddingBottom: 15, width: '100%', marginTop: 32, paddingLeft: 28, fontSize: 16 }} />

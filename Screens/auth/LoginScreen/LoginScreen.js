@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { TouchableWithoutFeedback, TouchableOpacity, Alert, KeyboardAvoidingView, Keyboard, Text, TextInput, View, ImageBackground, Platform } from "react-native";
+import { TouchableWithoutFeedback, TouchableOpacity, Alert, KeyboardAvoidingView, Keyboard, Text, TextInput, View, ImageBackground, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingViewComponent } from "react-native";
 import { styles } from "./style";
 
 import { useDispatch } from "react-redux";
 import { signIn } from "../../../redux/auth/authOprations";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const AuthorisationValues = {
     email: '',
@@ -35,7 +36,7 @@ export function LoginScreen({ navigation }) {
         <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>
             <ImageBackground source={require('../../../assets/sky.png')} resizeMode="cover" style={styles.backgrounImageCon5tainer}>
                 <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>
-                    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
                         <View style={styles.formBox}>
                             <Text style={[styles.mainText, { marginTop: 32 }]} >Войти</Text>
                             <View style={{ marginTop: 33, width: '100%' }}>

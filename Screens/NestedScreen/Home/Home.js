@@ -57,7 +57,7 @@ function Post({ item, navigation }) {
         <View
             style={{ width: '100%', marginBottom: 34, }}>
             <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })}>
-                <Image source={{ uri: item.picture }} style={{ width: 343, height: 240, borderRadius: 8 }} />
+                <Image source={{ uri: item.picture }} style={{ width: '100%', height: 260, borderRadius: 8 }} />
                 <Text style={{ marginTop: 8, color: '#212121', fontWeight: 500 }}>{item.title}</Text>
             </TouchableOpacity>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 11, width: '100%' }}  >

@@ -15,11 +15,13 @@ export const styles = StyleSheet.create({
         borderTopRightRadius: 25,
         width: '100%',
         paddingLeft: 16,
-        paddingRight: 16
+        paddingRight: 16,
+        
     },
     profileImageContainer: {
         position: 'absolute',
-        top: -60
+        top: -60,
+        
     },
     profileImage: {
         width: 120,

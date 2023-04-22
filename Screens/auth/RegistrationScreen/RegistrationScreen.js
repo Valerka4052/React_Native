@@ -39,8 +39,8 @@ export function RegistrationScreen({ navigation }) {
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestCameraPermissionsAsync();
-                   })()
-    },[])
+        })();
+    }, []);
 
     const takePicture = async () => {
         const photos = await camera.takePictureAsync();
