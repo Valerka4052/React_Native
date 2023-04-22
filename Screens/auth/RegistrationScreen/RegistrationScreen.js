@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TouchableWithoutFeedback, TouchableOpacity, Alert, KeyboardAvoidingView, Keyboard, Text, TextInput, View, ImageBackground, Image, Platform } from "react-native";
 import { AntDesign,Ionicons } from '@expo/vector-icons';
 import { styles } from "./style";
@@ -24,7 +24,8 @@ const borders = {
     name: '#E8E8E8',
 };
 
-export function RegistrationScreen({navigation}) {
+export function RegistrationScreen({ navigation }) {
+
     const [signUpValues, setSignUpValues] = useState(AuthorisationValues);
     const [showPassword, setShowPassword] = useState(true);
     const [borderColor, setBorderColor] = useState(borders);
@@ -35,7 +36,14 @@ export function RegistrationScreen({navigation}) {
     const dispatch = useDispatch();
     const { devicePhoto } = useSelector(state => state.authorisation);
 
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+                   })()
+    },[])
+
     const takePicture = async () => {
+        console.log('camera',camera);
         const photos = await camera.takePictureAsync();
         setphoto(photos.uri);
         dispatch(takeDevicePhoto(photos.uri))
@@ -69,14 +77,14 @@ export function RegistrationScreen({navigation}) {
         if (!signUpValues.email || !signUpValues.name || !signUpValues.password) {
             return Alert.alert('Ошибка регистрации', 'заполните все поля');
         };
-        //    dispatch(takeDevicePhoto(photo))
-        // console.log('signUpValues',signUpValues);
         dispatch(signUp(signUpValues)).then(async (user) => {
             //    console.log('value',user);
-            const img = await uploadPhotoToServer(devicePhoto)
-            // console.log('img',img);
-            updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
-            dispatch(photoFromFireBase(img));
+            if (photo) {
+                const img = await uploadPhotoToServer(devicePhoto)
+                // console.log('img',img);
+                updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
+                dispatch(photoFromFireBase(img));
+            };
         });
         // setSignUpValues(AuthorisationValues);
         Keyboard.dismiss();

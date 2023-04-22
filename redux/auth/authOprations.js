@@ -8,6 +8,7 @@ export const signUp = createAsyncThunk(
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
+      console.log('user',user);
       await updateProfile(user, { displayName: name,  });
       const userUpdateProfile = {
         nickName: user.displayName,
@@ -27,7 +28,7 @@ export const signIn = createAsyncThunk(
   async function ({ email, password }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log(userCredential.user);
+      console.log('userCredential.user',userCredential.user);
       if(userCredential.user){
         const userUpdateProfile = {
           nickName: userCredential.user.displayName,
@@ -61,9 +62,7 @@ export const signOutUser = createAsyncThunk(
 export const refreshStatus = createAsyncThunk(
   'authorisation/refreshStatus',
   async () => {
-    console.log(auth);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('onAuthStateChangeeeeeeeeeed', user);
       if (user) {
         const userUpdateProfile = {
           nickName: user.displayName,
@@ -71,7 +70,6 @@ export const refreshStatus = createAsyncThunk(
           email: user.email,
           profileImage: user.photoURL,
         };
-        console.log('userUpdateProfile', userUpdateProfile);
         return userUpdateProfile;
       } else {
         return null;

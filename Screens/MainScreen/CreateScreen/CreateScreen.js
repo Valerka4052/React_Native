@@ -79,6 +79,7 @@ export function CreateScreen({ navigation }) {
         
     const takePicture = async () => {
         setPhotoload(true);
+         console.log('camera',camera);
         const photos = await camera.takePictureAsync();
         const location = await Location.getCurrentPositionAsync();
         setphoto(photos.uri);
