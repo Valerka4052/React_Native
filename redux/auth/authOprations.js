@@ -14,14 +14,14 @@ export const signUp = createAsyncThunk(
           email: user.email,
         };
         return userUpdateProfile;
-      });
+      }).catch((error)=> Alert.alert('errorMessage'));
       return response;
     } catch (error) {
 
       console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;
-      Alert.alert(errorMessage);
+     return Alert.alert(errorMessage);
     };
   },
 );

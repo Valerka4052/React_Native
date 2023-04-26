@@ -10,11 +10,11 @@ import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
 export function CommentsScreen({ route }) {
     const [comment, setComment] = useState('');
     const [commentList, setCommentList] = useState([]);
-    const {nickName,profileImage,userId} = useSelector(state=>state.authorisation)
+    const { nickName, profileImage, userId } = useSelector(state => state.authorisation);
     const { picture, id } = route.params.item;
     const today = new Date();
     const str = today.toLocaleString();
-
+console.log(profileImage);
     useEffect(() => {
         LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     }, []);

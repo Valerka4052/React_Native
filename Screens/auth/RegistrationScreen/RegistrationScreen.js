@@ -60,7 +60,7 @@ export function RegistrationScreen({ navigation }) {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
@@ -76,24 +76,28 @@ export function RegistrationScreen({ navigation }) {
         if (!signUpValues.email || !signUpValues.name || !signUpValues.password) {
             return Alert.alert('Ошибка регистрации', 'заполните все поля');
         };
-       await dispatch(signUp(signUpValues)).then(async (user) => {
+        await dispatch(signUp(signUpValues)).then(async (user) => {
             console.log('value', user);
-           
-            if (photo) {
+            try {
+                if (photo) {
                 const img = await uploadPhotoToServer(devicePhoto)
                 console.log('img', img);
-
-                  await updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
+                await updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
                 const updatedValues = {
                     photo: auth.currentUser.photoURL,
                     nameP: auth.currentUser.displayName
-                }
+                };
                 dispatch(photoFromFireBase(updatedValues));
             } else {
                 await updateProfile(auth.currentUser, { displayName: signUpValues.name });
-                dispatch(inRegisterWithoutPhoto(auth.currentUser.displayName))
+                dispatch(inRegisterWithoutPhoto(auth.currentUser.displayName));
+                };
+                dispatch(inRegister());
+            } catch (error) {
+                return Alert.alert('Ошибка');
             }
-             dispatch(inRegister());
+            
+            
         });
         Keyboard.dismiss();
     };

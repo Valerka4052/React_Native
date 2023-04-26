@@ -28,8 +28,8 @@ export function ProfileScreen({ navigation }) {
             <View style={{ alignItems: 'center', backgroundColor: '#FFFFFF', borderTopLeftRadius: 25, borderTopRightRadius: 25, width: '100%', paddingLeft: 16, paddingRight: 16 }}>
                 <View style={{ position: 'absolute', top: -60 }}>
                     <Image
-                        source={{ uri: profileImage }}
-                        // source={profileImage ? { uri: profileImage } : require('../../../assets/user.png')}
+                        // source={{ uri: profileImage }}
+                        source={profileImage ? { uri: profileImage } : require('../../../assets/user.png')}
                         style={{ width: 120, height: 120, borderRadius: 16, }} />
                                    </View>
                 <View style={{ paddingTop: 70 }}>
