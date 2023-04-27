@@ -84,6 +84,7 @@ function Post({ item, navigation }) {
     const deleteLike = async () => {
         const idLike = Date.now().toString();
         const alovelaceDocumentRef = doc(db, `Posts/${item.id}`);
+        await deleteDoc(doc(alovelaceDocumentRef, "likes", `${userId}`));
         console.log('like Deleted');
     };
 
