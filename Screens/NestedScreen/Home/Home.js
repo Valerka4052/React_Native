@@ -47,8 +47,7 @@ function Head() {
 function Post({ item, navigation }) {
     const [count, setcount] = useState(0);
     const [likesCount, setLikesCount] = useState(0);
-    const [hasLike, setHasLike] = useState(false);
-    const [liked, setHasLiked] = useState(false);
+     const [liked, setHasLiked] = useState(false);
     const [whoLiked, setWhoLiked] = useState([])
     const { userId, nickName, profileImage } = useSelector(state => state.authorisation);
     console.log('whoLiked',whoLiked);
@@ -80,14 +79,11 @@ function Post({ item, navigation }) {
             name: `${nickName}`,
             profileImage: `${profileImage}`,
         });
-        setHasLike(true)
         console.log('like Added');
     };
     const deleteLike = async () => {
         const idLike = Date.now().toString();
         const alovelaceDocumentRef = doc(db, `Posts/${item.id}`);
-        await deleteDoc(doc(alovelaceDocumentRef, "likes", `${userId}`));
-        setHasLike(false)
         console.log('like Deleted');
     };
 
@@ -103,7 +99,7 @@ function Post({ item, navigation }) {
                     <EvilIcons name="comment" size={18} color={count>0?'#FF6C00':"#BDBDBD"} /><Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{count }</Text>
                 </TouchableOpacity >
 
-                <TouchableOpacity onPress={() => {hasLike?deleteLike():addLike()}}  style={{ display: 'flex', flexDirection: 'row', }}>
+                <TouchableOpacity onPress={() => {liked?deleteLike():addLike()}}  style={{ display: 'flex', flexDirection: 'row', }}>
                     <AntDesign name={liked?"like1":"like2"} size={18} color={liked?'#FF6C00':"#BDBDBD"} /><Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{likesCount }</Text>
                 </TouchableOpacity >
 

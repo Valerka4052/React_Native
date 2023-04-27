@@ -95,7 +95,8 @@ export function CreateScreen({ navigation }) {
     };
    
     const send = async () => {
-        if (!postValues) return Alert.alert('Вы что-то забыли заполнить', 'заполните все поля');
+        try {
+             if (!postValues) return Alert.alert('Вы что-то забыли заполнить', 'заполните все поля');
         console.log('send');
         const image = await uploadPhotoToServer();
         uploadPostToFireStore(image);
@@ -103,6 +104,10 @@ export function CreateScreen({ navigation }) {
         console.log('post', post);
         setPost(sendValues);
         setphoto(null);
+        } catch (error) {
+            return Alert.alert('что-то пошло не так...')
+        }
+       
     };
 
     return (
