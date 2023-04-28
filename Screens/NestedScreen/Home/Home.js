@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { FlatList, TouchableOpacity } from "react-native";
+import { FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { View, Text, Image } from "react-native";
 import { EvilIcons, Feather,AntDesign } from '@expo/vector-icons';
 import { styles } from "./style";
 import { useSelector } from "react-redux";
 import { collection, deleteDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/config";
+import { Touchable } from "react-native-web";
 
 export function Home({ navigation }) {
     const [arr, setArr] = useState([]);
@@ -47,8 +48,10 @@ function Head() {
 function Post({ item, navigation }) {
     const [count, setcount] = useState(0);
     const [likesCount, setLikesCount] = useState(0);
-     const [liked, setHasLiked] = useState(false);
-    const [whoLiked, setWhoLiked] = useState([])
+    const [liked, setHasLiked] = useState(false);
+    const [whoLiked, setWhoLiked] = useState([]);
+    const [showLikeList, setShowLikeList] = useState(false);
+
     const { userId, nickName, profileImage } = useSelector(state => state.authorisation);
     console.log('whoLiked',whoLiked);
     useEffect(() => {
@@ -78,7 +81,7 @@ function Post({ item, navigation }) {
         await setDoc(doc(alovelaceDocumentRef, "likes", `${userId}`), {
             name: `${nickName}`,
             profileImage: `${profileImage}`,
-        });
+            });
         console.log('like Added');
     };
     const deleteLike = async () => {
@@ -90,24 +93,50 @@ function Post({ item, navigation }) {
 
     return (
         <View
-            style={{ width: '100%', marginBottom: 34, }}>
+            style={{ width: '100%', marginBottom: 34, }} >
+            <Modal visible={showLikeList} animationType="slide" >
+                <FlatList onPress={() => { console.log('setShowLikeList(false)');; setShowLikeList(false) }}
+                    style={{ paddingTop: 50, paddingHorizontal: 16, }}
+                    data={whoLiked}
+                    keyExtractor={(item, idx) => idx.toString()}
+                    renderItem={({ item }) => <LikeUser item={item} />}
+                />
+                <TouchableOpacity onPress={() => { setShowLikeList(false) }} style={{ position: 'absolute', bottom: 60, right: 40, flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ marginRight: 10 }}>Закрыть</Text><AntDesign name="closecircleo" size={24} color="black" />
+                </TouchableOpacity>
+            </Modal>
             <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })}>
                 <Image source={{ uri: item.picture }} style={{ width: '100%', height: 260, borderRadius: 8 }} />
                 <Text style={{ marginTop: 8, color: '#212121', fontWeight: 500 }}>{item.title}</Text>
             </TouchableOpacity>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 11, width: '100%' }}  >
                 <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })} style={{ display: 'flex', flexDirection: 'row', }}>
-                    <EvilIcons name="comment" size={18} color={count>0?'#FF6C00':"#BDBDBD"} /><Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{count }</Text>
+                    <EvilIcons name="comment" size={18} color={count > 0 ? '#FF6C00' : "#BDBDBD"} /><Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{count}</Text>
                 </TouchableOpacity >
 
-                <TouchableOpacity onPress={() => {liked?deleteLike():addLike()}}  style={{ display: 'flex', flexDirection: 'row', }}>
-                    <AntDesign name={liked?"like1":"like2"} size={18} color={liked?'#FF6C00':"#BDBDBD"} /><Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{likesCount }</Text>
+                <TouchableOpacity onPress={() => { liked ? deleteLike() : addLike() }} >
+                    <AntDesign name={liked ? "like1" : "like2"} size={18} color={liked ? '#FF6C00' : "#BDBDBD"} />
                 </TouchableOpacity >
 
-                <TouchableOpacity onPress={() => navigation.navigate("Карта", { item })} style={{ display: 'flex', flexDirection: 'row',justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => { likesCount > 0 ? setShowLikeList(true) : setShowLikeList(false) }} style={{ display: 'flex', flexDirection: 'row', }}>
+                    <Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{likesCount} {likesCount === 1 ? 'like' : 'likes'}</Text>
+                </TouchableOpacity >
+
+                <TouchableOpacity onPress={() => navigation.navigate("Карта", { item })} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                     <Feather name="map-pin" size={18} color="red" style={{ marginRight: 8 }} />
                     <Text style={{ textDecorationLine: "underline", textDecorationStyle: "solid", textDecorationColor: "#000", color: '#212121' }}>{item.location}</Text>
                 </TouchableOpacity>
+            </View>
+        </View>
+    );
+};
+
+function LikeUser({item}) {
+    return (
+        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', marginTop: 8, marginBottom: 8, alignItems: 'center' }}>
+            <Image source={{ uri: item.profileImage }} style={{ width: 40, height: 40, borderRadius: 10, marginRight: 8 }} />
+            <View>
+                <Text style={{ fontSize: 16, fontWeight: 400, color: '#212121' }} >{item.name}</Text>
             </View>
         </View>
     );
