@@ -12,26 +12,30 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-      
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "jsEngine": "jsc",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.valerka4052.MyProject"
     },
     "android": {
       "jsEngine": "jsc",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.valerka4052.MyProject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    
     "plugins": [
       [
         "expo-camera",
@@ -39,12 +43,17 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ],
-     [
+      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ebd9321a-57c7-468f-94e4-df99247939d4"
+      }
+    }
   }
 }
