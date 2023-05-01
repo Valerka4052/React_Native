@@ -7,17 +7,17 @@ export const signUp = createAsyncThunk(
   'authorisation/signUp',
   async function ({ name, email, password }) {
     try {
-      
-      const response = await createUserWithEmailAndPassword(auth, email, password).then(({ user }) => {
+      const response = await createUserWithEmailAndPassword(auth, email, password)
+        // .then(({ user }) => {
+      console.log('response', response.user);
+      // const { email, uid } = response.user;
         const userUpdateProfile = {
-          userId: user.uid,
-          email: user.email,
+          userId: response.user.uid,
+          email: response.user.email,
         };
         return userUpdateProfile;
-      }).catch((error)=> Alert.alert('errorMessage'));
-      return response;
+          
     } catch (error) {
-
       console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;

@@ -78,11 +78,11 @@ export function RegistrationScreen({ navigation }) {
         };
         await dispatch(signUp(signUpValues)).then(async (user) => {
             console.log('value', user);
-            try {
-                if (photo) {
+            if (photo) {
                 const img = await uploadPhotoToServer(devicePhoto)
                 console.log('img', img);
                 await updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
+                console.log('update');
                 const updatedValues = {
                     photo: auth.currentUser.photoURL,
                     nameP: auth.currentUser.displayName
@@ -91,14 +91,12 @@ export function RegistrationScreen({ navigation }) {
             } else {
                 await updateProfile(auth.currentUser, { displayName: signUpValues.name });
                 dispatch(inRegisterWithoutPhoto(auth.currentUser.displayName));
-                };
-                dispatch(inRegister());
-            } catch (error) {
-                return Alert.alert('Ошибка');
-            }
-            
-            
-        });
+            };
+            dispatch(inRegister());
+        }
+        ).catch((error) => {
+            return Alert.alert('Ошибка', error);
+        })
         Keyboard.dismiss();
     };
 
