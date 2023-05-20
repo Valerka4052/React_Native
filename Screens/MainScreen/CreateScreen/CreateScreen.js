@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, Alert, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TouchableOpacity, Image, TextInput, Alert, Keyboard, TouchableWithoutFeedback, Dimensions } from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from 'expo-location'
 import { FontAwesome, Feather,MaterialIcons } from '@expo/vector-icons';
@@ -96,24 +96,23 @@ export function CreateScreen({ navigation }) {
    
     const send = async () => {
         try {
-             if (!postValues) return Alert.alert('Вы что-то забыли заполнить', 'заполните все поля');
-        console.log('send');
-        const image = await uploadPhotoToServer();
-        uploadPostToFireStore(image);
-        navigation.navigate("Home");
-        console.log('post', post);
-        setPost(sendValues);
-        setphoto(null);
+            if (!postValues) return Alert.alert('Вы что-то забыли заполнить', 'заполните все поля');
+            console.log('send');
+            const image = await uploadPhotoToServer();
+            uploadPostToFireStore(image);
+            navigation.navigate("Home");
+            console.log('post', post);
+            setPost(sendValues);
+            setphoto(null);
         } catch (error) {
             return Alert.alert('что-то пошло не так...')
         }
-       
     };
 
     return (
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
             <KeyboardAwareScrollView style={{ flex:1, width: '100%',height: '100%', paddingHorizontal: 16, backgroundColor: '#fff', }}>
-                <View style={{ borderRadius: 8, width: 480,alignSelf: 'center', height: 360, backgroundColor: '#F6F6F6', borderWidth: 1,overflow:'hidden', borderColor: '#E8E8E8', marginTop: 32, }} >
+                <View style={{ borderRadius: 8, width: Dimensions.get('window').width-32, height: Dimensions.get('window').width*60/100,alignSelf: 'center',  backgroundColor: '#F6F6F6', borderWidth: 1,overflow:'hidden', borderColor: '#E8E8E8', marginTop: 32, }} >
                     {photo === null ?
                         <Camera ref={setSnap} style={{ flex: 1, }} type={flipCamera ? 'front' : 'back'}  >
                             {photoload ?
@@ -124,7 +123,7 @@ export function CreateScreen({ navigation }) {
                                     <TouchableOpacity onPress={takePicture} style={{ width: 60, height: 60, borderRadius: 50, backgroundColor: 'rgba(255, 255, 255, 0.3)', alignItems: 'center', justifyContent: 'center', top: '50%', left: '50%', transform: [{ translateY: -30 }, { translateX: -30 }] }}>
                                         <FontAwesome name="camera" size={24} color="#BDBDBD" />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={toggleCamera} style={{ width: 40, height: 40, borderRadius: 50, backgroundColor: 'rgba(255, 255, 255, 0.3)', alignItems: 'center', justifyContent: 'center', top: '50%', left: '50%', transform: [{ translateY: -80 }, { translateX: 140 }] }}>
+                                    <TouchableOpacity onPress={toggleCamera} style={{ width: 40, height: 40, borderRadius: 50, backgroundColor: 'rgba(255, 255, 255, 0.3)', alignItems: 'center', justifyContent: 'center', top: '50%', left: '50%', transform: [{ translateY: -80 }, { translateX: 130 }] }}>
                                         <MaterialIcons name="flip-camera-android" size={20} color="#BDBDBD" />
                                     </TouchableOpacity>
                                 </View>}

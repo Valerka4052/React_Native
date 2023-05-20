@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TouchableWithoutFeedback, TouchableOpacity, Alert, KeyboardAvoidingView, Keyboard, Text, TextInput, View, ImageBackground, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingViewComponent } from "react-native";
 import { styles } from "./style";
 
-import { useDispatch } from "react-redux";
+import { Loader } from "../../../components/Loader";
+
+import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../../../redux/auth/authOprations";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -22,6 +24,7 @@ export function LoginScreen({ navigation }) {
     const [borderColor, setBorderColor] = useState(borders);
     const [showKeyboard, setShowKeyboard] = useState(false);
     const togglePassword = () => setShowPassword(prevState => !prevState);
+    const { isLoading } = useSelector(state => state.authorisation);
     const submit = () => {
         if (!logInValues.email || !logInValues.password) {
             return Alert.alert('Ошибка регистрации', 'заполните все поля')
@@ -31,8 +34,10 @@ export function LoginScreen({ navigation }) {
         Keyboard.dismiss();
         
     };
-
+  
+console.log('isLoading',isLoading);
     return (
+          isLoading ? <Loader /> :
         <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>
             <ImageBackground source={require('../../../assets/sky.png')} resizeMode="cover" style={styles.backgrounImageCon5tainer}>
                 <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>

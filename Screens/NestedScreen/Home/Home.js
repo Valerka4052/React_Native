@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { Dimensions, FlatList, Modal, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { View, Text, Image } from "react-native";
 import { EvilIcons, Feather,AntDesign } from '@expo/vector-icons';
 import { styles } from "./style";
 import { useSelector } from "react-redux";
 import { collection, deleteDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/config";
-import { Touchable } from "react-native-web";
+import { Touchable } from "react-native";
+import Lottie from 'lottie-react-native';
+import { useRef } from "react";
+// import { useRef } from "react";
+// import { Animated, Easing } from 'react-native';
 
 export function Home({ navigation }) {
     const [arr, setArr] = useState([]);
@@ -51,9 +55,18 @@ function Post({ item, navigation }) {
     const [liked, setHasLiked] = useState(false);
     const [whoLiked, setWhoLiked] = useState([]);
     const [showLikeList, setShowLikeList] = useState(false);
-
     const { userId, nickName, profileImage } = useSelector(state => state.authorisation);
-    console.log('whoLiked',whoLiked);
+    console.log('whoLiked', whoLiked);
+       const anim = useRef(null);
+
+    useEffect(() => {
+        setTimeout(() => {
+            anim.current.play();
+        }, 0)
+    }, [])
+
+
+
     useEffect(() => {
         const unsubscribeComments = onSnapshot(collection(db, `Posts/${item.id}/comments`), (store) => {
             setcount(store.size);
@@ -106,7 +119,7 @@ function Post({ item, navigation }) {
                 </TouchableOpacity>
             </Modal>
             <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })}>
-                <Image source={{ uri: item.picture }} style={{ width: '100%', height: 260, borderRadius: 8 }} />
+                <Image source={{ uri: item.picture }} style={{ width: Dimensions.get('window').width-32, height: Dimensions.get('window').width*60/100, borderRadius: 8 }} />
                 <Text style={{ marginTop: 8, color: '#212121', fontWeight: 500 }}>{item.title}</Text>
             </TouchableOpacity>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 11, width: '100%' }}  >
@@ -123,7 +136,8 @@ function Post({ item, navigation }) {
                 </TouchableOpacity >
 
                 <TouchableOpacity onPress={() => navigation.navigate("Карта", { item })} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                    <Feather name="map-pin" size={18} color="red" style={{ marginRight: 8 }} />
+                    <Lottie ref={anim} source={require('../../../assets/53469-maps-point.json')}   autoPlay loop style={{ width:25,height:25,marginRight: 8 }} />
+                    {/* <Feather name="map-pin" size={18} color="red" style={{ marginRight: 8 }} /> */}
                     <Text style={{ textDecorationLine: "underline", textDecorationStyle: "solid", textDecorationColor: "#000", color: '#212121' }}>{item.location}</Text>
                 </TouchableOpacity>
             </View>

@@ -1,13 +1,14 @@
-import { View, Text } from "react-native"
+import { View, Text, Dimensions } from "react-native"
 import { styles } from "./style";
 import { ImageBackground, Image, FlatList } from "react-native";
 import { EvilIcons, Feather, MaterialIcons } from '@expo/vector-icons';
 import { collection, query, where, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Alert } from "react-native";
+import Lottie from 'lottie-react-native';
 
 
 
@@ -47,6 +48,13 @@ export function ProfileScreen({ navigation }) {
 
 function Post({ item, navigation }) {
     const [count, setCount] = useState(0)
+           const anim = useRef(null);
+
+    useEffect(() => {
+        setTimeout(() => {
+            anim.current.play();
+        }, 0)
+    }, [])
     
     useEffect(() => {
         const unsubscribeComments = onSnapshot(collection(db, `Posts/${item.id}/comments`), (store) => {
@@ -71,7 +79,7 @@ function Post({ item, navigation }) {
         <View
             style={{ width: '100%', marginBottom: 34, }}>
             <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })}>
-                <Image source={{ uri: item.picture }} style={{ width: '100%', height: 240, borderRadius: 8 }} />
+                <Image source={{ uri: item.picture }} style={{ width: Dimensions.get('window').width-32, height: Dimensions.get('window').width*60/100, borderRadius: 8 }} />
                 <Text style={{ marginTop: 8, color: '#212121', fontWeight: 500 }}>{item.title}</Text>
             </TouchableOpacity>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 11, width: '100%' }}  >
@@ -83,7 +91,8 @@ function Post({ item, navigation }) {
                     <Text style={{ textDecorationLine: "underline", textDecorationStyle: "solid", textDecorationColor: "#000", color: '#212121' }}>{item.location}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={deletePost} style={{ zIndex: 2, position: 'absolute', bottom: 70, right: 30, width: 40, height: 40, borderRadius: 50, backgroundColor: '#FF6C00', alignItems: 'center', justifyContent: 'center', }} >
-                    <MaterialIcons name="delete" size={24} color="#fff" />
+                    <Lottie ref={anim} source={require('../../../assets/65780-delete.json')} speed={0.4}   autoPlay loop style={{ width:25,height:25 }} />
+                    {/* <MaterialIcons name="delete" size={24} color="#fff" /> */}
                 </TouchableOpacity>
             </View>
         </View>
