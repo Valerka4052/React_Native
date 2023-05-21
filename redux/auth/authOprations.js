@@ -9,7 +9,7 @@ export const signUp = createAsyncThunk(
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password)
         // .then(({ user }) => {
-      console.log('response', response.user);
+      // console.log('response', response.user);
       // const { email, uid } = response.user;
         const userUpdateProfile = {
           userId: response.user.uid,
@@ -18,7 +18,7 @@ export const signUp = createAsyncThunk(
         return userUpdateProfile;
           
     } catch (error) {
-      console.log('error',error);
+      // console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;
      return Alert.alert(errorMessage);
@@ -31,7 +31,7 @@ export const signIn = createAsyncThunk(
   async function ({ email, password }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('userCredential.user',userCredential.user);
+      // console.log('userCredential.user',userCredential.user);
       if(userCredential.user){
         const userUpdateProfile = {
           nickName: userCredential.user.displayName,
@@ -44,7 +44,7 @@ export const signIn = createAsyncThunk(
         return null;
       }
     } catch (error) {
-      console.log('error',error);
+      // console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;
       Alert.alert(errorMessage);
@@ -59,7 +59,7 @@ export const signOutUser = createAsyncThunk(
        signOut(auth);
       console.log('out');
     } catch (error) {
-     console.log(error);
+    //  console.log(error);
      Alert.alert(error);
     };
   },

@@ -56,8 +56,21 @@ function Post({ item, navigation }) {
     const [whoLiked, setWhoLiked] = useState([]);
     const [showLikeList, setShowLikeList] = useState(false);
     const { userId, nickName, profileImage } = useSelector(state => state.authorisation);
-    console.log('whoLiked', whoLiked);
-       const anim = useRef(null);
+    // console.log('whoLiked', whoLiked);
+    const anim = useRef(null);
+    const likeAnim = useRef(null);
+    const firstPlayAnim = useRef(true)
+
+    useEffect(() => {
+        if (firstPlayAnim.current) {
+            if (liked) {
+                likeAnim.current.play(80, 80)
+            } else { likeAnim.current.play(1, 1) };
+            firstPlayAnim.current = false;
+        } else if (liked) {
+            likeAnim.current.play(1, 80)
+        } else { likeAnim.current.play(80, 1) };
+    }, [liked]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -73,7 +86,7 @@ function Post({ item, navigation }) {
         });
         const unsubscribeLikes = onSnapshot(collection(db, `Posts/${item.id}/likes`), (store) => {
             setWhoLiked(store.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-            console.log('aaaaa',store.forEach((doc)=>console.log(doc.data())));
+            // console.log('aaaaa',store.forEach((doc)=>console.log(doc.data())));
             setLikesCount(store.size);
         });
         const unsubscribeMyLikes = onSnapshot(doc(db, `Posts/${item.id}/likes`, `${userId}`), (doc) => {
@@ -94,14 +107,14 @@ function Post({ item, navigation }) {
         await setDoc(doc(alovelaceDocumentRef, "likes", `${userId}`), {
             name: `${nickName}`,
             profileImage: `${profileImage}`,
-            });
-        console.log('like Added');
+        });
+        // console.log('like Added');
     };
     const deleteLike = async () => {
         const idLike = Date.now().toString();
         const alovelaceDocumentRef = doc(db, `Posts/${item.id}`);
         await deleteDoc(doc(alovelaceDocumentRef, "likes", `${userId}`));
-        console.log('like Deleted');
+        // console.log('like Deleted');
     };
 
     return (
@@ -123,15 +136,16 @@ function Post({ item, navigation }) {
                 <Text style={{ marginTop: 8, color: '#212121', fontWeight: 500 }}>{item.title}</Text>
             </TouchableOpacity>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 11, width: '100%' }}  >
-                <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })} style={{ display: 'flex', flexDirection: 'row', }}>
+                <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })} style={{ display: 'flex', flexDirection: 'row',alignItems:'center' }}>
                     <EvilIcons name="comment" size={18} color={count > 0 ? '#FF6C00' : "#BDBDBD"} /><Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{count}</Text>
                 </TouchableOpacity >
 
                 <TouchableOpacity onPress={() => { liked ? deleteLike() : addLike() }} >
-                    <AntDesign name={liked ? "like1" : "like2"} size={18} color={liked ? '#FF6C00' : "#BDBDBD"} />
+                 <Lottie ref={likeAnim} source={require('../../../assets/like-button.json')} autoPlay={false} loop={false} speed={1}  style={{ width:30,height:30,marginRight: 8 }} />
+                    {/* <AntDesign name={liked ? "like1" : "like2"} size={18} color={liked ? '#FF6C00' : "#BDBDBD"} /> */}
                 </TouchableOpacity >
 
-                <TouchableOpacity onPress={() => { likesCount > 0 ? setShowLikeList(true) : setShowLikeList(false) }} style={{ display: 'flex', flexDirection: 'row', }}>
+                <TouchableOpacity onPress={() => { likesCount > 0 ? setShowLikeList(true) : setShowLikeList(false) }} style={{ display: 'flex', flexDirection: 'row', alignItems:'center'}}>
                     <Text style={{ color: '#bdbdbd', marginLeft: 8 }}>{likesCount} {likesCount === 1 ? 'like' : 'likes'}</Text>
                 </TouchableOpacity >
 

@@ -65,7 +65,7 @@ function Post({ item, navigation }) {
 
     const deletePostFromStorage = async () => {
         await deleteDoc(doc(db, "Posts", `${item.id}`));
-        console.log('Post deleted');
+        // console.log('Post deleted');
     };
 
     const deletePost = () => {

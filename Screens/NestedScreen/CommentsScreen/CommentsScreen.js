@@ -11,14 +11,14 @@ import ImageZoom from "react-native-image-pan-zoom";
 import Lottie from 'lottie-react-native';
 
 export function CommentsScreen({ route }) {
-     const [isShowPicture, setIsShowPicture] = useState(false);
+    const [isShowPicture, setIsShowPicture] = useState(false);
     const [comment, setComment] = useState('');
     const [commentList, setCommentList] = useState([]);
     const { nickName, profileImage, userId } = useSelector(state => state.authorisation);
     const { picture, id } = route.params.item;
     const today = new Date();
     const str = today.toLocaleString();
-    console.log(profileImage);
+    // console.log(profileImage);
     useEffect(() => {
         LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     }, []);
@@ -39,7 +39,7 @@ export function CommentsScreen({ route }) {
             date: str,
             profileImage: profileImage,
         });
-        console.log('Comment Added=>', comment);
+        // console.log('Comment Added=>', comment);
     };
       
     const submitComment = () => {
@@ -51,10 +51,8 @@ export function CommentsScreen({ route }) {
     const images = [{
         url: picture,
     }];
-console.log('igfiygiyg',Dimensions.get('window').width);
-    return (
-           
 
+    return (
         <View style={{ flex: 1, width: '100%', paddingHorizontal: 16, }}>
             <Modal visible={isShowPicture} style={{ flex: 1 }}>
                 <ImageZoom cropWidth={Dimensions.get('window').width}

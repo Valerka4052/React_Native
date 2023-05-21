@@ -35,7 +35,6 @@ export function LoginScreen({ navigation }) {
         
     };
   
-console.log('isLoading',isLoading);
     return (
           isLoading ? <Loader /> :
         <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => { Keyboard.dismiss(); setShowKeyboard(false); }}>

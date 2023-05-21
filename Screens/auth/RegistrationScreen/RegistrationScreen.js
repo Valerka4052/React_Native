@@ -44,10 +44,7 @@ export function RegistrationScreen({ navigation }) {
     }, []);
 
     const takePicture = async () => {
-        console.log(cameraRef.current);
-        const sizes = await cameraRef.current.getAvailablePictureSizesAsync("4:3")
-        console.log('sizes', sizes);
-        const options = { quality: 0.1, base64: true};
+               const options = { quality: 0.1, base64: true};
         const photos = await cameraRef.current.takePictureAsync(options);
         setphoto(photos.uri);
         dispatch(takeDevicePhoto(photos.uri))
@@ -82,12 +79,12 @@ export function RegistrationScreen({ navigation }) {
             return Alert.alert('Ошибка регистрации', 'заполните все поля');
         };
         await dispatch(signUp(signUpValues)).then(async (user) => {
-            console.log('value', user);
+            // console.log('value', user);
             if (photo) {
-               const img = await uploadPhotoToServer(devicePhoto)
-                console.log('img', img);
+                const img = await uploadPhotoToServer(devicePhoto)
+                // console.log('img', img);
                 await updateProfile(auth.currentUser, { photoURL: img, displayName: signUpValues.name });
-                console.log('update');
+                // console.log('update');
                 const updatedValues = {
                     photo: auth.currentUser.photoURL,
                     nameP: auth.currentUser.displayName

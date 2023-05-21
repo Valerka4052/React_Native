@@ -20,7 +20,6 @@ const sendValues = {
     nickName: null,
     userId:null,
 };
-
 export function CreateScreen({ navigation }) {
     const [post, setPost] = useState(sendValues);
     const [camera, setSnap] = useState(null);
@@ -56,9 +55,8 @@ export function CreateScreen({ navigation }) {
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.5,
         });
-        console.log(result);
         if (!result.cancelled) {
             setphoto(result.assets[0].uri);
         };
@@ -75,21 +73,17 @@ export function CreateScreen({ navigation }) {
     };
 
     const uploadPostToFireStore = async (image) => {
-        console.log(image);
         const id = Date.now().toString();
         await setDoc(doc(db, "Posts", `${id}`), { ...post, picture: image });
-        console.log('Post is ADDED');
     };
 
     const postValues = (post.location && post.title && photo);
         
     const takePicture = async () => {
         setPhotoload(true);
-
         const photos = await camera.takePictureAsync();
         const location = await Location.getCurrentPositionAsync();
         setphoto(photos.uri);
-        console.log(location);
         setPost(prev => ({ ...prev, coords: location.coords }));
         setPhotoload(false);
     };
@@ -97,11 +91,9 @@ export function CreateScreen({ navigation }) {
     const send = async () => {
         try {
             if (!postValues) return Alert.alert('Вы что-то забыли заполнить', 'заполните все поля');
-            console.log('send');
             const image = await uploadPhotoToServer();
             uploadPostToFireStore(image);
             navigation.navigate("Home");
-            console.log('post', post);
             setPost(sendValues);
             setphoto(null);
         } catch (error) {
