@@ -121,7 +121,7 @@ function Post({ item, navigation }) {
         <View
             style={{ width: '100%', marginBottom: 34, }} >
             <Modal visible={showLikeList} animationType="slide" >
-                <FlatList onPress={() => { console.log('setShowLikeList(false)');; setShowLikeList(false) }}
+                <FlatList onPress={() => {  setShowLikeList(false) }}
                     style={{ paddingTop: 50, paddingHorizontal: 16, }}
                     data={whoLiked}
                     keyExtractor={(item, idx) => idx.toString()}
@@ -131,9 +131,11 @@ function Post({ item, navigation }) {
                     <Text style={{ marginRight: 10 }}>Закрыть</Text><AntDesign name="closecircleo" size={24} color="black" />
                 </TouchableOpacity>
             </Modal>
-            <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })}>
+            <TouchableOpacity style={{position: 'relative'}} onPress={() => { navigation.navigate("Коментарии", { item }) }}>
+                 
                 <Image source={{ uri: item.picture }} style={{ width: Dimensions.get('window').width-32, height: Dimensions.get('window').width*60/100, borderRadius: 8 }} />
                 <Text style={{ marginTop: 8, color: '#212121', fontWeight: 500 }}>{item.title}</Text>
+                <Image source={{ uri: item.profileImage }} style={{ width: 40, height: 40, borderRadius: 10,position: 'absolute',top:5,right:5, }} />
             </TouchableOpacity>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 11, width: '100%' }}  >
                 <TouchableOpacity onPress={() => navigation.navigate("Коментарии", { item })} style={{ display: 'flex', flexDirection: 'row',alignItems:'center' }}>

@@ -18,14 +18,15 @@ const sendValues = {
     title: null,
     coords: null,
     nickName: null,
-    userId:null,
+    userId: null,
+    profileImage:null,
 };
 export function CreateScreen({ navigation }) {
     const [post, setPost] = useState(sendValues);
     const [camera, setSnap] = useState(null);
     const [photo, setphoto] = useState(null);
     const [photoload, setPhotoload] = useState(false);
-    const { nickName, userId } = useSelector(state => state.authorisation);
+    const { nickName, userId,profileImage } = useSelector(state => state.authorisation);
     const [flipCamera, setFlipCamera] = useState(false);
 
     useEffect(() => {
@@ -45,7 +46,7 @@ export function CreateScreen({ navigation }) {
     }, []);
 
     useEffect(() => {
-        setPost(prev => ({ ...prev, nickName: nickName, userId: userId }));
+        setPost(prev => ({ ...prev, nickName: nickName, userId: userId, profileImage: profileImage }));
     }, []);
     
     const toggleCamera = () => setFlipCamera(prev => !prev);

@@ -18,10 +18,10 @@ export const signUp = createAsyncThunk(
         return userUpdateProfile;
           
     } catch (error) {
-      // console.log('error',error);
+      console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;
-     return Alert.alert(errorMessage);
+     return Alert.alert(error);
     };
   },
 );
@@ -44,10 +44,10 @@ export const signIn = createAsyncThunk(
         return null;
       }
     } catch (error) {
-      // console.log('error',error);
+      console.log('error',error);
       const errorCode = error.code;
       const errorMessage = error.message;
-      Alert.alert(errorMessage);
+    return  Alert.alert(errorMessage);
     };
   },
 );
@@ -59,7 +59,7 @@ export const signOutUser = createAsyncThunk(
        signOut(auth);
       console.log('out');
     } catch (error) {
-    //  console.log(error);
+     console.log(error);
      Alert.alert(error);
     };
   },

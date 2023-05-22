@@ -38,7 +38,7 @@ export function ProfileScreen({ navigation }) {
                         ListEmptyComponent={Empty}
                         data={arr}
                         keyExtractor={item => item.id.toString()}
-                        renderItem={({ item }) => <Post item={item} navigation={navigation} />}
+                        renderItem={({ item }) => <Post arr={arr} item={item} navigation={navigation} />}
                     />
                 </View>
             </View>
@@ -46,7 +46,7 @@ export function ProfileScreen({ navigation }) {
     );
 };
 
-function Post({ item, navigation }) {
+function Post({ item, navigation,arr }) {
     const [count, setCount] = useState(0)
            const anim = useRef(null);
 
@@ -54,7 +54,7 @@ function Post({ item, navigation }) {
         setTimeout(() => {
             anim.current.play();
         }, 0)
-    }, [])
+    }, [arr])
     
     useEffect(() => {
         const unsubscribeComments = onSnapshot(collection(db, `Posts/${item.id}/comments`), (store) => {

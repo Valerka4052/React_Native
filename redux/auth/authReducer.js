@@ -7,7 +7,7 @@ import { Alert } from 'react-native';
 export const authSlice = createSlice({
     name: 'authorisation',
     initialState: {
-        isLoading:false,
+        isLoading: false,
         userId: null,
         nickName: null,
         email: null,
@@ -28,36 +28,41 @@ export const authSlice = createSlice({
                 return { ...state, isLoading: true, };
             })
             .addCase(signIn.pending, (state, { payload }) => {
-                console.log('payload', payload);
-                return { ...state, isLoading: true, };
-            })
-             .addCase(signOutUser.pending, (state, { payload }) => {
                 // console.log('payload', payload);
                 return { ...state, isLoading: true, };
-             })
+            })
+            .addCase(signOutUser.pending, (state, { payload }) => {
+                // console.log('payload', payload);
+                return { ...state, isLoading: true, };
+            })
             // .addCase(refreshStatus.pending, (state, { payload }) => {
             //     console.log('payload', payload);
             //     return { ...state, isLoading: true, };
             // })
             .addCase(signUp.fulfilled, (state, { payload }) => {
                 // console.log('payload', payload);
-                return { ...state, userId: payload.userId, email: payload.email,isLoading:false, };
+                if (!payload) return { ...state, isLoading: false };
+                return { ...state, userId: payload.userId, email: payload.email, isLoading: false, };
             })
             .addCase(signUp.rejected, (state) => {
                 Alert.alert('Что-то пошло не так')
-                    return { ...state, isLoading: true, };;
+                return { ...state, isLoading: false, };
+            })
+            .addCase(signIn.rejected, (state) => {
+                Alert.alert('Что-то пошло не так')
+                return { ...state, isLoading: false, };
             })
             .addCase(signIn.fulfilled, (state, { payload }) => {
                 // console.log(payload);
-                if (!payload) return;
+                if (!payload) return { ...state, isLoading: false };
                 if (!payload.photoURL) {
-                    return { ...state, userId: payload.userId, nickName: payload.nickName, email: payload.email, stateChange: true,isLoading:false };
+                    return { ...state, userId: payload.userId, nickName: payload.nickName, email: payload.email, stateChange: true, isLoading: false };
                 }
-                return { ...state, userId: payload.userId, nickName: payload.nickName, profileImage: payload.photoURL, email: payload.email, stateChange: true,isLoading:false };
+                return { ...state, userId: payload.userId, nickName: payload.nickName, profileImage: payload.photoURL, email: payload.email, stateChange: true, isLoading: false };
             })
             .addCase(refreshStatus.fulfilled, (state, { payload }) => {
                 // console.log('payload', payload);
-                if (!payload) return;
+                if (!payload) return  { ...state, isLoading: false }; ;
                 const { userId, nickName, email, profileImage } = payload;
                 // console.log(payload);
                 return { ...state, userId: userId, nickName: nickName, email: email, profileImage: profileImage, stateChange: true, isLoading: false };
